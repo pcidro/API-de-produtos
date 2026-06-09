@@ -1,12 +1,9 @@
-import type { iProduct } from "./types/Iproduct";
-
 const baseUrl = "http://localhost:3000";
 
-const product: iProduct = {
+const product = {
   nome: "Arroz",
-  slug: "arroz",
   preco: 990,
-  quantidade: 3,
+  quantidade: 2,
 };
 
 async function postProduct() {
@@ -42,20 +39,41 @@ async function getProduct() {
   console.log(data);
 }
 
+async function updateProduct() {
+  const res = await fetch(`${baseUrl}/products?id=5`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(product),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    console.log("Erro:", data.error);
+    return;
+  }
+
+  console.log(data);
+}
+
+async function deleteProduct() {
+  const res = await fetch(`${baseUrl}/products?id=5`, {
+    method: "DELETE",
+  });
+  const data = await res.json();
+  console.log(data);
+}
+
 const actions = {
   post: postProduct,
   list: getProducts,
   one: getProduct,
+  put: updateProduct,
+  delete: deleteProduct,
 };
 
 const action = process.argv[2] as keyof typeof actions;
-
-if (!action || !actions[action]) {
-  console.log("Escolha uma ação:");
-  console.log("node client.ts post");
-  console.log("node client.ts list");
-  console.log("node client.ts one");
-  process.exit();
-}
 
 actions[action]();

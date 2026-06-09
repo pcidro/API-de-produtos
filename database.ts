@@ -57,3 +57,43 @@ export function getProductById(id: number) {
     return null;
   }
 }
+
+export function updateProductById(
+  id: number,
+  nome: string,
+  preco: number,
+  quantidade: number,
+) {
+  try {
+    const result = db
+      .prepare(
+        /*sql*/ `
+   UPDATE "produtos" set "nome"= ?, "preco" = ?, "quantidade" = ? WHERE "id" = ? 
+    `,
+      )
+      .run(nome, preco, quantidade, id);
+    if (result.changes === 0) {
+      return null;
+    }
+    return db.prepare(/*sql*/ `SELECT * FROM "produtos" where id = ?`).get(id);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export function deleteProductById(id: number) {
+  try {
+    return db
+      .prepare(
+        /*sql*/
+        `
+    DELETE FROM 'produtos' WHERE "id" = ? 
+    `,
+      )
+      .run(id);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

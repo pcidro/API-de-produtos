@@ -9,12 +9,16 @@ type Handler = (
 type Routes = {
   GET: Record<string, Handler>;
   POST: Record<string, Handler>;
+  PUT: Record<string, Handler>;
+  DELETE: Record<string, Handler>;
 };
 
 export class Router {
   routes: Routes = {
     GET: {},
     POST: {},
+    PUT: {},
+    DELETE: {},
   };
 
   get(route: string, handler: Handler) {
@@ -25,8 +29,21 @@ export class Router {
     this.routes.POST[route] = handler;
   }
 
+  put(route: string, handler: Handler) {
+    this.routes.PUT[route] = handler;
+  }
+
+  delete(route: string, handler: Handler) {
+    this.routes.DELETE[route] = handler;
+  }
+
   find(method: string | undefined, route: string) {
-    if (method !== "GET" && method !== "POST") {
+    if (
+      method !== "GET" &&
+      method !== "POST" &&
+      method !== "PUT" &&
+      method !== "DELETE"
+    ) {
       return null;
     }
 
